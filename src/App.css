@@ -1,8 +1,48 @@
-.App {
+.music-app {
   text-align: center;
 }
 
-.App-logo {
+.string-line {
+  stroke: black;
+  stroke-width: 1;
+  position: absolute
+}
+
+.note-container {
+  position: relative;
+}
+
+.note-boxes {
+  position: absolute;
+  color: black;
+  z-index: 2;
+}
+
+.note-text {
+  position: absolute;
+  z-index: 4;
+  font-family: "Arial";
+  font-size: 16;
+  fill: black;
+}
+
+
+.strings-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+.string-container {
+  display: flex;
+  flex-direction: row;
+}
+
+
+
+/* .App-logo {
   height: 40vmin;
   pointer-events: none;
 }
@@ -34,5 +74,4 @@
   }
   to {
     transform: rotate(360deg);
-  }
-}
+  } */

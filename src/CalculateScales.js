@@ -1,5 +1,9 @@
 const majorIntervals = [2, 2, 1, 2, 2, 2, 1]
 
+const majorScale = [0, 2, 4, 5, 7, 9, 11]
+
+const standardTuning = ['E3', 'A3', 'D4', 'G4', 'B4', 'E5']
+
 //defining C as 0
 const sharpNoteMap = {
     'C': 0,
@@ -65,3 +69,140 @@ const generateInverseNoteMap = (noteMap) => {
 const extendedNoteMap = extendRegister(sharpNoteMap, 12)
 
 console.log(generateInverseNoteMap(extendedNoteMap))
+
+const generateCircleOfFifths = (noteMap) => {
+    const inverseNoteMap = generateInverseNoteMap(noteMap)
+    var cycle = new Array()
+    var notecycle = new Array()
+    for (var i = 0; i < 12; i++) {
+        cycle.push(i * 7 % 12)
+        notecycle.push(inverseNoteMap[(i * 7 % 12).toString()])
+    }
+    return cycle, notecycle
+}
+
+const circleOfFifths = generateCircleOfFifths(sharpNoteMap)
+
+console.log(circleOfFifths)
+
+
+//this will generate chords up to a note number skip. Therefore, it does not generate all possible chords. Stacks thirds
+const stackThirds = (scale, notenumber) => {
+    var chords = new Array()
+    for (var i = 0; i < scale.length; i++) {
+        var chord = new Array()
+        for (var j = 0; j < notenumber; j++) {
+            chord.push(scale[(i + 2 * j) % scale.length])
+
+        }
+        chords.push(chord)
+    }
+    return chords
+}
+
+function getDepth(arr, depth = 0) {
+    if (Array.isArray(arr)) {
+        return getDepth(arr[0], depth + 1);
+    } else {
+        return depth;
+    }
+}
+
+//object must be an array of integers
+const convertToNotes = (object, noteMap) => {
+    const depth = getDepth(object)
+    var newObject = object
+    switch (depth) {
+        case 1: {
+            newObject = object.map(element => {
+                return noteMap[element.toString()]
+            })
+            break
+        }
+        case 2: {
+
+            newObject = object.map(element => {
+                return element.map(subElement => {
+                    return noteMap[subElement.toString()]
+
+                })
+            })
+            break
+        }
+    }
+    return newObject
+}
+
+//object must be an array of integers
+const convertToStrings = (object, noteMap) => {
+    const depth = getDepth(object)
+
+    const inverseNoteMap = generateInverseNoteMap(noteMap)
+    var newObject = object
+    switch (depth) {
+        case 1: {
+            newObject = object.map(element => {
+                return inverseNoteMap[element.toString()]
+            })
+            break
+        }
+        case 2: {
+
+            newObject = object.map(element => {
+                return element.map(subElement => {
+                    return inverseNoteMap[subElement.toString()]
+
+                })
+            })
+            break
+        }
+    }
+    return newObject
+}
+
+const chords = stackThirds(majorScale, 3)
+
+console.log(chords)
+
+const inverseNoteMap = generateInverseNoteMap(sharpNoteMap)
+
+console.log(inverseNoteMap)
+
+const chordsAsNotes = convertToNotes(chords, inverseNoteMap)
+
+console.log(chordsAsNotes)
+
+console.log(convertToNotes(majorScale, inverseNoteMap))
+
+const extendNotes = () => {
+
+}
+
+const generateGuitarStrings = (tuning, noteMap) => {
+
+    const fretNumber = 24
+    const extendedNoteMap = extendRegister(noteMap, 12)
+
+    var newTuning = tuning.map(note => extendedNoteMap[note.toString()])
+
+    var strings = new Array()
+    for (var i = 0; i < tuning.length; i++) {
+        var string = new Array()
+        for (var j = 0; j < fretNumber + 1; j++) {
+            string.push(newTuning[i] + j)
+        }
+        strings.push(string)
+    }
+
+    return strings
+}
+
+const standardStrings = generateGuitarStrings(standardTuning, sharpNoteMap)
+
+console.log(standardStrings)
+
+console.log(convertToStrings(standardStrings, extendRegister(sharpNoteMap, 12)))
+
+const applyNotes = (notes,tuning) => {
+    
+}
